@@ -3,6 +3,8 @@ import fs from 'fs';
 import chalk from 'chalk';
 import { autoScroll } from './scraper-helpers';
 
+// TO DO: Fix eslint config
+
 const url = 'https://www.goodreads.com/review/list/86630558-melissa-thompson?shelf=to-read';
 
 const error = chalk.bold.red;
@@ -20,7 +22,7 @@ const error = chalk.bold.red;
       // Variables have to live here for Chromium to interact with them
       // Variables declared outside of page.evaluate() are inaccessible
       const titles = document.querySelectorAll('div.value > a[title]');
-      let titleList = [];
+      const titleList = [];
 
       for (let i = 0; i < titles.length; i++) {
         titleList.push(titles[i].getAttribute('title'));
