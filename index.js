@@ -3,8 +3,6 @@ import fs from 'fs';
 import chalk from 'chalk';
 import { autoScroll } from './scraper-helpers';
 
-// TO DO: Fix eslint config
-
 const url = 'https://www.goodreads.com/review/list/86630558-melissa-thompson?shelf=to-read';
 
 const error = chalk.bold.red;
