@@ -4,6 +4,7 @@
   "description": "A scraper to add items from Goodreads \"want to read\" list to an Amazon wishlist",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
