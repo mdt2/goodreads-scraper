@@ -20,16 +20,26 @@ const success = chalk.keyword("green");
     await page.waitForSelector('div.value > a[title]');
 
     const results = await page.evaluate(() => {
-      // Vars have to live here for Chromium to interact with them
-      // Vars declared outside of page.evaluate() are inaccessible
-      let titles = document.querySelectorAll('div.value > a[title]');
+      // Variables have to live here for Chromium to interact with them
+      // Variables declared outside of page.evaluate() are inaccessible
+      const titles = document.querySelectorAll('div.value > a[title]');
       let titleList = [];
 
       for (let i = 0; i < titles.length; i++) {
         titleList.push(titles[i].getAttribute('title'));
       }
 
-      return titleList;
+      const loadedIndicator = document.querySelector('#infiniteStatus');
+      const loadedIndicatorText = loadedIndicator.innerText;
+      const numbers = /\d+/g;
+      const loadedNumbersList = loadedIndicatorText.match(numbers);
+
+      // Check if all titles are loaded before returning
+      // autoScroll should take care of this but this way I can throw an error if it doesn't
+      // TO DO: make this error out if the condition isn't met
+      if (loadedNumbersList[0] === loadedNumbersList[1]) {
+        return titleList;
+      }
     });
 
     browser.close();
@@ -40,7 +50,7 @@ const success = chalk.keyword("green");
     });
   } catch (err) {
     console.log(error(err));
-    await browser.close();
+    browser.close();
   }
 })();
 
