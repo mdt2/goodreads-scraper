@@ -1,7 +1,28 @@
-import puppeteer from 'puppeteer';
-import fs from 'fs';
-import chalk from 'chalk';
-import { autoScroll } from './scraper-helpers';
+const puppeteer = require('puppeteer');
+const fs = require('fs');
+const chalk = require('chalk');
+
+// TO DO: Move this into a scraper-helpers file
+// TO DO: Might have to add babel to do this successfully
+// From https://stackoverflow.com/questions/51529332/puppeteer-scroll-down-until-you-cant-anymore
+const autoScroll = async (page) => {
+  await page.evaluate(async () => {
+    await new Promise((resolve) => {
+      let totalHeight = 0;
+      const distance = 100;
+      const timer = setInterval(() => {
+        const { scrollHeight } = document.body;
+        window.scrollBy(0, distance);
+        totalHeight += distance;
+
+        if (totalHeight >= scrollHeight) {
+          clearInterval(timer);
+          resolve();
+        }
+      }, 100);
+    });
+  });
+};
 
 const url = 'https://www.goodreads.com/review/list/86630558-melissa-thompson?shelf=to-read';
 
