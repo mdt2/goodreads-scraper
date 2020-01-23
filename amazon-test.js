@@ -20,11 +20,12 @@ const url = 'https://amazon.com/';
     await page.click('#signInSubmit');
 
     // Search Amazon
+    await page.waitForSelector('#twotabsearchtextbox');
     await page.type('#twotabsearchtextbox', 'Managing Oneself');
     await page.click('input.nav-input');
-    await page.waitForSelector('.s-result-list');
+    await page.waitForSelector('div.s-result-list');
     const links = await page.$$('a.a-link-normal.a-text-normal');
-    await links[3].click();
+    await links[0].click();
 
     // browser.close();
   } catch (err) {
