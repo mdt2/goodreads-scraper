@@ -5,5 +5,5 @@ Use this to scrape the Goodreads "want to read" list, find each of the books on 
 
 ## Prerequisites
 * Sign in to your Goodreads account
-* Sign in to your Amazon account
+* Create an `.env` file with your Amazon account username and password
 * Create an Amazon wishlist for your books

@@ -9,15 +9,17 @@ const url = 'https://amazon.com/';
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
 
+    // Sign in to Amazon
     await page.goto(url);
-    // await page.click('#nav-link-accountList');
-    // await page.waitForSelector('.nav-action-button');
-    // await page.click('.nav-action-button');
-    // await page.waitForSelector('#ap_email');
-    // await page.type('#ap_email', process.env.AMAZONUSER);
-    // await page.click('#continue');
+    await page.click('#nav-link-accountList');
+    await page.waitForSelector('input[type="email"]');
+    await page.type('input[type="email"]', process.env.AMAZONUSER);
+    await page.click('#continue');
+    await page.waitForSelector('input[type="password"]');
+    await page.type('input[type="password"]', process.env.AMAZONPASS);
+    await page.click('#signInSubmit');
 
-    // Code to search amazon is working
+    // Search Amazon
     await page.type('#twotabsearchtextbox', 'Managing Oneself');
     await page.click('input.nav-input');
     await page.waitForSelector('.s-result-list');
