@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 const chalk = require('chalk');
@@ -60,83 +62,37 @@ const error = chalk.bold.red;
       }
     });
 
-    browser.close();
+    // browser.close();
 
     fs.writeFile('titles.json', JSON.stringify(results, null, 2), (err) => {
       if (err) throw err;
       console.log('Titles saved!');
     });
+
+    // Sign in to Amazon
+    await page.goto('https://amazon.com/');
+    await page.click('#nav-link-accountList');
+    await page.waitForSelector('input[type="email"]');
+    await page.type('input[type="email"]', process.env.AMAZONUSER);
+    await page.click('#continue');
+    await page.waitForSelector('input[type="password"]');
+    await page.type('input[type="password"]', process.env.AMAZONPASS);
+    await page.click('#signInSubmit');
+
+    // Search Amazon
+    await page.waitForSelector('#twotabsearchtextbox');
+    await page.type('#twotabsearchtextbox', 'Managing Oneself');
+    await page.click('input.nav-input');
+    await page.waitForSelector('div.s-result-list');
+    const links = await page.$$('a.a-link-normal.a-text-normal');
+    await links[0].click();
+
+    // Add item to Wish List
+    await page.waitForSelector('input#add-to-wishlist-button');
+    await page.click('input#add-to-wishlist-button');
+    await page.waitForSelector('span#atwl-list-name-2XQOCHIMITAVA');
+    await page.click('span#atwl-list-name-2XQOCHIMITAVA');
   } catch (err) {
-    console.log(error(err));
-    browser.close();
+    console.log('Script failed:', error(err));
   }
 })();
-
-
-// const scrape = async () => {
-//   const browser = await puppeteer.launch({ headless: false });
-//   const page = await browser.newPage();
-
-//   await page.goto(url);
-
-//   let titleList = [];
-//   const numberOfPages = 7; // change to dynamic if this works
-//   // const nextPage = document.querySelectorAll('.next_page');
-
-//   for (let i = 0; i < numberOfPages; i++) {
-//     await page.waitForSelector('div.value > a[title]');
-//     titleList = titleList.concat(await getTitlesOnPage(page));
-
-//     if (i != numberOfPages - 1) {
-//       await page.click('.next_page');
-//     }
-//   }
-
-//   browser.close();
-//   return results;
-// };
-
-// const getTitlesOnPage = async (page) => {
-//   return page.evaluate(() => {
-//     let data = [];
-//     const titles = document.querySelectorAll('div.value > a[title]');
-
-//     for (let i = 0; i < titles.length; i++) {
-//       data.push(titles[i].getAttribute('title'));
-//     }
-
-//     console.log('evaluated');
-//     return data;
-//   });
-// }
-
-// const organizeTitles = () => {
-//   fs.writeFile('titles.json', JSON.stringify(results, null, 2), (err) => {
-//     if (err) throw err;
-//     console.log('Titles organized!');
-//   });
-// }
-
-// scrape().then((value) => {
-//   console.log(value);
-//   console.log('Scraped!');
-// })
-
-
-// const getWebsiteContent = async (url) => {
-//   try {
-//     const response = await axios.get(url);
-//     const $ = cheerio.load(response.data);
-
-//     let titles = $('div.value > a[title]');
-//     let titleList = [];
-//     for (let i = 0; i < titles.length; i++) {
-//       titleList.push(titles[i].attribs.title);
-//     }
-//     console.log(titleList);
-//   } catch (error) {
-//     console.error(error)
-//   }
-// }
-
-// getWebsiteContent(url);
